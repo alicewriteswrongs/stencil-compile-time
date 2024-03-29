@@ -1,10 +1,10 @@
-import * as ts from 'typescript';
+import ts, { factory } from 'typescript';
 
 export function testTransformer(
   transformCtx: ts.TransformationContext,
 ): ts.Transformer<ts.SourceFile> {
   function visitor(node: ts.Node): ts.VisitResult<ts.Node> {
-    if (ts.isMethodDeclaration(node) && node.name.getText() === 'render') {
+    if (ts.isMethodDeclaration(node) && node.name.getText() === 'getText') {
       return ts.factory.updateMethodDeclaration(
         node,
         node.modifiers,
@@ -14,15 +14,15 @@ export function testTransformer(
         node.typeParameters,
         node.parameters,
         node.type,
-        ts.factory.createBlock([
-          ts.factory.createExpressionStatement(
-            ts.factory.createCallExpression(
-              ts.factory.createPropertyAccessExpression(
-                ts.factory.createIdentifier('console'),
-                ts.factory.createIdentifier('log'),
+        factory.updateBlock(node.body, [
+          factory.createExpressionStatement(
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier('console'),
+                factory.createIdentifier('log'),
               ),
               undefined,
-              [ts.factory.createStringLiteral('hello, world!')],
+              [factory.createStringLiteral('hey from the transformer!')],
             ),
           ),
           ...node.body.statements,

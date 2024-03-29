@@ -1,7 +1,9 @@
 import { Config } from '@stencil/core';
+import { testTransformer } from './src/transformers';
 
 export const config: Config = {
   namespace: 'stencil-compile-time',
+  customTransformers: [ testTransformer ],
   outputTargets: [
     {
       type: 'dist',
